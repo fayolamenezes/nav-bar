@@ -161,7 +161,6 @@
       transform: rotate(-45deg) translate(5px, -5px);
     }
 
-    /* Dots menu row containers */
     .dotsMenuRow {
       position: relative;
     }
@@ -214,7 +213,6 @@
 
   <div class="spacer"></div>
 
-  <!-- Hamburger Menu -->
   <div class="menu" id="menu">
     <a href="#">Menu Item 1</a>
     <a href="#">Menu Item 2</a>
@@ -226,7 +224,6 @@
     <a href="#">Menu Item 8</a>
   </div>
 
-  <!-- Dots Menu with Animated Rows -->
   <div class="menu gray-menu" id="dotsMenu">
     <div class="dotsMenuRow"><div class="black-row"></div><a href="#">Grid Item 1</a></div>
     <div class="dotsMenuRow"><div class="black-row"></div><a href="#">Grid Item 2</a></div>
@@ -238,99 +235,126 @@
     <div class="dotsMenuRow"><div class="black-row"></div><a href="#">Grid Item 8</a></div>
   </div>
 
-  <script>
-    // Hamburger logic
+    <script>
     const burger = document.getElementById("burger");
     const slide = document.getElementById("hamburgerSlide");
     const closeSlide = document.getElementById("closeSlide");
     const menu = document.getElementById("menu");
     const menuLinks = menu.querySelectorAll("a");
 
-    let menuOpen = false;
-
-    burger.addEventListener("click", () => {
-      if (!menuOpen) {
-        slide.classList.add("show");
-        menu.classList.add("show");
-        burger.classList.add("open");
-
-        gsap.to(menuLinks, {
-          opacity: 1,
-          x: 0,
-          stagger: 0.1,
-          delay: 0.3
-        });
-
-        menuOpen = true;
-      }
-    });
-
-    closeSlide.addEventListener("click", () => {
-      slide.classList.remove("show");
-      menu.classList.remove("show");
-      burger.classList.remove("open");
-
-      gsap.to(menuLinks, {
-        opacity: 0,
-        x: -20,
-        stagger: 0.05
-      });
-
-      menuOpen = false;
-    });
-
-    // Dots menu logic with animation
     const dots = document.getElementById("dots");
     const dotsSlide = document.getElementById("dotsSlide");
     const closeDotsSlide = document.getElementById("closeDotsSlide");
     const dotsMenu = document.getElementById("dotsMenu");
     const dotsLinks = dotsMenu.querySelectorAll("a");
 
+    let menuOpen = false;
     let dotsOpen = false;
 
-    dots.addEventListener("click", () => {
-      if (!dotsOpen) {
-        dotsSlide.classList.add("show");
-        dotsMenu.classList.add("show");
+    function openHamburgerMenu() {
+    slide.classList.add("show");
+    menu.classList.add("show");
+    burger.classList.add("open");
 
-        const blackRows = dotsMenu.querySelectorAll(".black-row");
-
-        const tl = gsap.timeline();
-
-        tl.to(blackRows, {
-        x: '100%',
-        duration: 0.5,
-        stagger: 0.1,
-        ease: 'power2.out'
-        }, 0); // Start at time 0
-
-        tl.to(dotsLinks, {
+    gsap.to(menuLinks, {
         opacity: 1,
         x: 0,
-        stagger: 0.1,
-        ease: 'power2.out'
-        }, 0); // Start at time 0 (in parallel)
+        stagger: 0.05,
+        duration: 0.5
+    });
 
-        dotsOpen = true;
-      }
+    menuOpen = true;
+    }
+
+    function closeHamburgerMenu(callback) {
+    slide.classList.remove("show");
+    menu.classList.remove("show");
+    burger.classList.remove("open");
+
+    gsap.to(menuLinks, {
+        opacity: 0,
+        x: -20,
+        stagger: 0.03,
+        duration: 0.2,
+        onComplete: () => {
+        menuOpen = false;
+        if (callback) callback();
+        }
+    });
+    }
+
+    function openDotsMenu() {
+    dotsSlide.classList.add("show");
+    dotsMenu.classList.add("show");
+
+    const blackRows = dotsMenu.querySelectorAll(".black-row");
+
+    const tl = gsap.timeline();
+    tl.to(blackRows, {
+        x: '100%',
+        duration: 0.5,
+        stagger: 0.05,
+        ease: 'power2.out'
+    }, 0);
+
+    tl.to(dotsLinks, {
+        opacity: 1,
+        x: 0,
+        stagger: 0.05,
+        duration: 0.4,
+        ease: 'power2.out'
+    }, 0);
+
+    dotsOpen = true;
+    }
+
+    function closeDotsMenu(callback) {
+    dotsSlide.classList.remove("show");
+    dotsMenu.classList.remove("show");
+
+    const blackRows = dotsMenu.querySelectorAll(".black-row");
+    blackRows.forEach(row => gsap.set(row, { x: '0%' }));
+
+    gsap.to(dotsLinks, {
+        opacity: 0,
+        x: -20,
+        stagger: 0.03,
+        duration: 0.2,
+        onComplete: () => {
+        dotsOpen = false;
+        if (callback) callback();
+        }
+    });
+    }
+
+    burger.addEventListener("click", () => {
+        if (!menuOpen) {
+        if (dotsOpen) {
+            closeDotsMenu(openHamburgerMenu);
+        } else {
+            openHamburgerMenu();
+        }
+        }
+    });
+
+    closeSlide.addEventListener("click", () => {
+        closeHamburgerMenu();
+    });
+
+    dots.addEventListener("click", () => {
+        if (!dotsOpen) {
+        if (menuOpen) {
+            closeHamburgerMenu(openDotsMenu);
+        } else {
+            openDotsMenu();
+        }
+        }
     });
 
     closeDotsSlide.addEventListener("click", () => {
-      dotsSlide.classList.remove("show");
-      dotsMenu.classList.remove("show");
-
-      const blackRows = dotsMenu.querySelectorAll(".black-row");
-      blackRows.forEach(row => gsap.set(row, { x: '0%' }));
-
-      gsap.to(dotsLinks, {
-        opacity: 0,
-        x: -20,
-        stagger: 0.05
-      });
-
-      dotsOpen = false;
+        closeDotsMenu();
     });
-  </script>
+    </script>
 
 </body>
 </html>
