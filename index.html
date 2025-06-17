@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hamburger & Dots Menu</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0e0e0e;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      height: 60px;
+      background: #0e0e0e;
+      border-bottom: 1px solid #333;
+      z-index: 1000;
+      position: fixed;
+      top: 0;
+      width: 100%;
+    }
+
+    .nav-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-left: 1px solid #444;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-box:first-child {
+      border-left: none;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .dots {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      grid-template-columns: repeat(3, 6px);
+      grid-template-rows: repeat(3, 6px);
+      gap: 2px;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .dots div {
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+    }
+
+    .burger {
+      width: 30px;
+      height: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .burger div {
+      height: 3px;
+      background: white;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .spacer {
+      height: 60px;
+    }
+
+    /* White slide panels inside nav boxes */
+    .hamburger-slide,
+    .dots-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      transform: translateX(-100%);
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      transition: transform 0.3s ease;
+    }
+
+    .hamburger-slide.show,
+    .dots-slide.show {
+      transform: translateX(0%);
+    }
+
+    .hamburger-slide .close,
+    .dots-slide .close {
+      font-size: 24px;
+      color: black;
+      cursor: pointer;
+    }
+
+    .menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 999;
+      transform: translateY(-100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-top: 80px;
+      transition: transform 0.4s ease;
+    }
+
+    .menu.show {
+      transform: translateY(0%);
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: white;
+      font-size: 20px;
+      padding: 35px;
+      border-bottom: 1px solid #444;
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+
+    .gray-menu {
+      background: #222;
+    }
+
+    .gray-menu a {
+      border-bottom: 1px solid #555;
+    }
+
+    .burger.open div:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .burger.open div:nth-child(2) {
+      opacity: 0;
+    }
+
+    .burger.open div:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-box">
+      <div class="logo">LOGO</div>
+    </div>
+    <div class="nav-box" id="dotsBox">
+      <div class="dots-slide" id="dotsSlide">
+        <div class="close" id="closeDotsSlide">×</div>
+      </div>
+      <div class="dots" id="dots">
+        <div></div><div></div><div></div>
+        <div></div><div></div><div></div>
+        <div></div><div></div><div></div>
+      </div>
+    </div>
+    <div class="nav-box" id="burgerBox">
+      <div class="hamburger-slide" id="hamburgerSlide">
+        <div class="close" id="closeSlide">×</div>
+      </div>
+      <div class="burger" id="burger">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="spacer"></div>
+
+  <!-- Fullscreen Menus -->
+  <div class="menu" id="menu">
+    <a href="#">Menu Item 1</a>
+    <a href="#">Menu Item 2</a>
+    <a href="#">Menu Item 3</a>
+    <a href="#">Menu Item 4</a>
+    <a href="#">Menu Item 5</a>
+    <a href="#">Menu Item 6</a>
+    <a href="#">Menu Item 7</a>
+    <a href="#">Menu Item 8</a>
+  </div>
+
+  <div class="menu gray-menu" id="dotsMenu">
+    <a href="#">Grid Item 1</a>
+    <a href="#">Grid Item 2</a>
+    <a href="#">Grid Item 3</a>
+    <a href="#">Grid Item 4</a>
+    <a href="#">Grid Item 5</a>
+    <a href="#">Grid Item 6</a>
+    <a href="#">Grid Item 7</a>
+    <a href="#">Grid Item 8</a>
+  </div>
+
+  <script>
+    // Hamburger logic
+    const burger = document.getElementById("burger");
+    const slide = document.getElementById("hamburgerSlide");
+    const closeSlide = document.getElementById("closeSlide");
+    const menu = document.getElementById("menu");
+    const menuLinks = menu.querySelectorAll("a");
+
+    let menuOpen = false;
+
+    burger.addEventListener("click", () => {
+      if (!menuOpen) {
+        slide.classList.add("show");
+        menu.classList.add("show");
+        burger.classList.add("open");
+
+        gsap.to(menuLinks, {
+          opacity: 1,
+          x: 0,
+          stagger: 0.1,
+          delay: 0.3
+        });
+
+        menuOpen = true;
+      }
+    });
+
+    closeSlide.addEventListener("click", () => {
+      slide.classList.remove("show");
+      menu.classList.remove("show");
+      burger.classList.remove("open");
+
+      gsap.to(menuLinks, {
+        opacity: 0,
+        x: -20,
+        stagger: 0.05
+      });
+
+      menuOpen = false;
+    });
+
+    // Dots logic
+    const dots = document.getElementById("dots");
+    const dotsSlide = document.getElementById("dotsSlide");
+    const closeDotsSlide = document.getElementById("closeDotsSlide");
+    const dotsMenu = document.getElementById("dotsMenu");
+    const dotsLinks = dotsMenu.querySelectorAll("a");
+
+    let dotsOpen = false;
+
+    dots.addEventListener("click", () => {
+      if (!dotsOpen) {
+        dotsSlide.classList.add("show");
+        dotsMenu.classList.add("show");
+
+        gsap.to(dotsLinks, {
+          opacity: 1,
+          x: 0,
+          stagger: 0.1,
+          delay: 0.3
+        });
+
+        dotsOpen = true;
+      }
+    });
+
+    closeDotsSlide.addEventListener("click", () => {
+      dotsSlide.classList.remove("show");
+      dotsMenu.classList.remove("show");
+
+      gsap.to(dotsLinks, {
+        opacity: 0,
+        x: -20,
+        stagger: 0.05
+      });
+
+      dotsOpen = false;
+    });
+  </script>
+
+</body>
+</html>
