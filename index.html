@@ -16,7 +16,7 @@
 
     header {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 2fr 1fr 1fr;
       height: 60px;
       background: #0e0e0e;
       border-bottom: 1px solid #333;
@@ -83,7 +83,6 @@
       height: 60px;
     }
 
-    /* White slide panels inside nav boxes */
     .hamburger-slide,
     .dots-slide {
       position: absolute;
@@ -124,7 +123,7 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      padding-top: 80px;
+      padding-top: 50px;
       transition: transform 0.4s ease;
     }
 
@@ -143,7 +142,7 @@
     }
 
     .gray-menu {
-      background: #222;
+      background: #161616;
     }
 
     .gray-menu a {
@@ -160,6 +159,28 @@
 
     .burger.open div:nth-child(3) {
       transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* Dots menu row containers */
+    .dotsMenuRow {
+      position: relative;
+    }
+
+    .black-row {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: black;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .dotsMenuRow a {
+      position: relative;
+      z-index: 2;
+      display: block;
     }
   </style>
 </head>
@@ -193,7 +214,7 @@
 
   <div class="spacer"></div>
 
-  <!-- Fullscreen Menus -->
+  <!-- Hamburger Menu -->
   <div class="menu" id="menu">
     <a href="#">Menu Item 1</a>
     <a href="#">Menu Item 2</a>
@@ -205,15 +226,16 @@
     <a href="#">Menu Item 8</a>
   </div>
 
+  <!-- Dots Menu with Animated Rows -->
   <div class="menu gray-menu" id="dotsMenu">
-    <a href="#">Grid Item 1</a>
-    <a href="#">Grid Item 2</a>
-    <a href="#">Grid Item 3</a>
-    <a href="#">Grid Item 4</a>
-    <a href="#">Grid Item 5</a>
-    <a href="#">Grid Item 6</a>
-    <a href="#">Grid Item 7</a>
-    <a href="#">Grid Item 8</a>
+    <div class="dotsMenuRow"><div class="black-row"></div><a href="#">Grid Item 1</a></div>
+    <div class="dotsMenuRow"><div class="black-row"></div><a href="#">Grid Item 2</a></div>
+    <div class="dotsMenuRow"><div class="black-row"></div><a href="#">Grid Item 3</a></div>
+    <div class="dotsMenuRow"><div class="black-row"></div><a href="#">Grid Item 4</a></div>
+    <div class="dotsMenuRow"><div class="black-row"></div><a href="#">Grid Item 5</a></div>
+    <div class="dotsMenuRow"><div class="black-row"></div><a href="#">Grid Item 6</a></div>
+    <div class="dotsMenuRow"><div class="black-row"></div><a href="#">Grid Item 7</a></div>
+    <div class="dotsMenuRow"><div class="black-row"></div><a href="#">Grid Item 8</a></div>
   </div>
 
   <script>
@@ -257,7 +279,7 @@
       menuOpen = false;
     });
 
-    // Dots logic
+    // Dots menu logic with animation
     const dots = document.getElementById("dots");
     const dotsSlide = document.getElementById("dotsSlide");
     const closeDotsSlide = document.getElementById("closeDotsSlide");
@@ -271,12 +293,23 @@
         dotsSlide.classList.add("show");
         dotsMenu.classList.add("show");
 
-        gsap.to(dotsLinks, {
-          opacity: 1,
-          x: 0,
-          stagger: 0.1,
-          delay: 0.3
-        });
+        const blackRows = dotsMenu.querySelectorAll(".black-row");
+
+        const tl = gsap.timeline();
+
+        tl.to(blackRows, {
+        x: '100%',
+        duration: 0.5,
+        stagger: 0.1,
+        ease: 'power2.out'
+        }, 0); // Start at time 0
+
+        tl.to(dotsLinks, {
+        opacity: 1,
+        x: 0,
+        stagger: 0.1,
+        ease: 'power2.out'
+        }, 0); // Start at time 0 (in parallel)
 
         dotsOpen = true;
       }
@@ -285,6 +318,9 @@
     closeDotsSlide.addEventListener("click", () => {
       dotsSlide.classList.remove("show");
       dotsMenu.classList.remove("show");
+
+      const blackRows = dotsMenu.querySelectorAll(".black-row");
+      blackRows.forEach(row => gsap.set(row, { x: '0%' }));
 
       gsap.to(dotsLinks, {
         opacity: 0,
