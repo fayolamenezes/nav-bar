@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hamburger & Dots Menu</title>
+  <title>Hamburger & Dots Menu (Mobile/Tablet Only)</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <style>
     body {
@@ -15,171 +15,189 @@
     }
 
     header {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr;
-      height: 60px;
-      background: #0e0e0e;
-      border-bottom: 1px solid #333;
-      z-index: 1000;
-      position: fixed;
-      top: 0;
-      width: 100%;
+      display: none;
     }
 
-    .nav-box {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-left: 1px solid #444;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .nav-box:first-child {
-      border-left: none;
-    }
-
-    .logo {
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    .dots {
-      width: 22px;
-      height: 22px;
-      display: grid;
-      grid-template-columns: repeat(3, 6px);
-      grid-template-rows: repeat(3, 6px);
-      gap: 2px;
-      cursor: pointer;
-      z-index: 2;
-    }
-
-    .dots div {
-      width: 6px;
-      height: 6px;
-      background: white;
-      border-radius: 50%;
-    }
-
-    .burger {
-      width: 30px;
-      height: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      cursor: pointer;
-      z-index: 2;
-    }
-
-    .burger div {
-      height: 3px;
-      background: white;
-      border-radius: 2px;
-      transition: all 0.3s ease;
-    }
-
-    .spacer {
-      height: 60px;
-    }
-
-    .hamburger-slide,
-    .dots-slide {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: white;
-      transform: translateX(-100%);
-      z-index: 10;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0;
-      transition: transform 0.3s ease;
-    }
-
-    .hamburger-slide.show,
-    .dots-slide.show {
-      transform: translateX(0%);
-    }
-
-    .hamburger-slide .close,
-    .dots-slide .close {
-      font-size: 24px;
-      color: black;
-      cursor: pointer;
-    }
-
-    .menu {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 999;
-      transform: translateY(-100%);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      padding-top: 50px;
-      transition: transform 0.4s ease;
-    }
-
-    .menu.show {
-      transform: translateY(0%);
-    }
-
-    .menu a {
-      text-decoration: none;
-      color: white;
-      font-size: 20px;
-      padding: 35px;
-      border-bottom: 1px solid #444;
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-
+    .menu,
     .gray-menu {
-      background: #161616;
+      display: none;
     }
 
-    .gray-menu a {
-      border-bottom: 1px solid #555;
-    }
+    /* MOBILE & TABLET ONLY STYLES */
+    @media (max-width: 1024px) {
+      header {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        height: 60px;
+        background: #0e0e0e;
+        border-bottom: 1px solid #333;
+        z-index: 1000;
+        position: fixed;
+        top: 0;
+        width: 100%;
+      }
 
-    .burger.open div:nth-child(1) {
-      transform: rotate(45deg) translate(5px, 5px);
-    }
+      .menu,
+      .gray-menu {
+        display: flex;
+      }
 
-    .burger.open div:nth-child(2) {
-      opacity: 0;
-    }
+      .nav-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-left: 1px solid #444;
+        position: relative;
+        overflow: hidden;
+      }
 
-    .burger.open div:nth-child(3) {
-      transform: rotate(-45deg) translate(5px, -5px);
-    }
+      .nav-box:first-child {
+        border-left: none;
+      }
 
-    .dotsMenuRow {
-      position: relative;
-    }
+      .logo {
+        font-size: 20px;
+        font-weight: bold;
+      }
 
-    .black-row {
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: black;
-      z-index: 1;
-      pointer-events: none;
-    }
+      .dots {
+        width: 22px;
+        height: 22px;
+        display: grid;
+        grid-template-columns: repeat(3, 6px);
+        grid-template-rows: repeat(3, 6px);
+        gap: 2px;
+        cursor: pointer;
+        z-index: 2;
+      }
 
-    .dotsMenuRow a {
-      position: relative;
-      z-index: 2;
-      display: block;
+      .dots div {
+        width: 6px;
+        height: 6px;
+        background: white;
+        border-radius: 50%;
+      }
+
+      .burger {
+        width: 30px;
+        height: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        cursor: pointer;
+        z-index: 2;
+      }
+
+      .burger div {
+        height: 3px;
+        background: white;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+      }
+
+      .spacer {
+        height: 60px;
+      }
+
+      .hamburger-slide,
+      .dots-slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        transform: translateX(-100%);
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.3s ease;
+      }
+
+      .hamburger-slide.show,
+      .dots-slide.show {
+        transform: translateX(0%);
+      }
+
+      .hamburger-slide .close,
+      .dots-slide .close {
+        font-size: 24px;
+        color: black;
+        cursor: pointer;
+      }
+
+      .menu,
+      .gray-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 999;
+        transform: translateY(-100%);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 50px;
+        transition: transform 0.4s ease;
+      }
+
+      .menu.show,
+      .gray-menu.show {
+        transform: translateY(0%);
+      }
+
+      .menu a,
+      .gray-menu a {
+        text-decoration: none;
+        color: white;
+        font-size: 20px;
+        padding: 35px;
+        border-bottom: 1px solid #444;
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+
+      .gray-menu {
+        background: #161616;
+      }
+
+      .gray-menu a {
+        border-bottom: 1px solid #555;
+      }
+
+      .burger.open div:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+
+      .burger.open div:nth-child(2) {
+        opacity: 0;
+      }
+
+      .burger.open div:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+      }
+
+      .dotsMenuRow {
+        position: relative;
+      }
+
+      .black-row {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: black;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .dotsMenuRow a {
+        position: relative;
+        z-index: 2;
+        display: block;
+      }
     }
   </style>
 </head>
@@ -235,126 +253,127 @@
     <div class="dotsMenuRow"><div class="black-row"></div><a href="#">Grid Item 8</a></div>
   </div>
 
-    <script>
-    const burger = document.getElementById("burger");
-    const slide = document.getElementById("hamburgerSlide");
-    const closeSlide = document.getElementById("closeSlide");
-    const menu = document.getElementById("menu");
-    const menuLinks = menu.querySelectorAll("a");
+  <script>
+    if (window.innerWidth <= 1024) {
+      const burger = document.getElementById("burger");
+      const slide = document.getElementById("hamburgerSlide");
+      const closeSlide = document.getElementById("closeSlide");
+      const menu = document.getElementById("menu");
+      const menuLinks = menu.querySelectorAll("a");
 
-    const dots = document.getElementById("dots");
-    const dotsSlide = document.getElementById("dotsSlide");
-    const closeDotsSlide = document.getElementById("closeDotsSlide");
-    const dotsMenu = document.getElementById("dotsMenu");
-    const dotsLinks = dotsMenu.querySelectorAll("a");
+      const dots = document.getElementById("dots");
+      const dotsSlide = document.getElementById("dotsSlide");
+      const closeDotsSlide = document.getElementById("closeDotsSlide");
+      const dotsMenu = document.getElementById("dotsMenu");
+      const dotsLinks = dotsMenu.querySelectorAll("a");
 
-    let menuOpen = false;
-    let dotsOpen = false;
+      let menuOpen = false;
+      let dotsOpen = false;
 
-    function openHamburgerMenu() {
-    slide.classList.add("show");
-    menu.classList.add("show");
-    burger.classList.add("open");
+      function openHamburgerMenu() {
+        slide.classList.add("show");
+        menu.classList.add("show");
+        burger.classList.add("open");
 
-    gsap.to(menuLinks, {
-        opacity: 1,
-        x: 0,
-        stagger: 0.15,
-        duration: 0.5
-    });
+        gsap.to(menuLinks, {
+          opacity: 1,
+          x: 0,
+          stagger: 0.15,
+          duration: 0.5
+        });
 
-    menuOpen = true;
-    }
+        menuOpen = true;
+      }
 
-    function closeHamburgerMenu(callback) {
-    slide.classList.remove("show");
-    menu.classList.remove("show");
-    burger.classList.remove("open");
+      function closeHamburgerMenu(callback) {
+        slide.classList.remove("show");
+        menu.classList.remove("show");
+        burger.classList.remove("open");
 
-    gsap.to(menuLinks, {
-        opacity: 0,
-        x: -20,
-        stagger: 0.05,
-        duration: 0.3,
-        onComplete: () => {
-        menuOpen = false;
-        if (callback) callback();
-        }
-    });
-    }
+        gsap.to(menuLinks, {
+          opacity: 0,
+          x: -20,
+          stagger: 0.05,
+          duration: 0.3,
+          onComplete: () => {
+            menuOpen = false;
+            if (callback) callback();
+          }
+        });
+      }
 
-    function openDotsMenu() {
-    dotsSlide.classList.add("show");
-    dotsMenu.classList.add("show");
+      function openDotsMenu() {
+        dotsSlide.classList.add("show");
+        dotsMenu.classList.add("show");
 
-    const blackRows = dotsMenu.querySelectorAll(".black-row");
+        const blackRows = dotsMenu.querySelectorAll(".black-row");
 
-    const tl = gsap.timeline();
-    tl.to(blackRows, {
-        x: '100%',
-        duration: 0.4,
-        stagger: 0.12,
-        ease: 'power2.out'
-    }, 0);
+        const tl = gsap.timeline();
+        tl.to(blackRows, {
+          x: '100%',
+          duration: 0.4,
+          stagger: 0.12,
+          ease: 'power2.out'
+        }, 0);
 
-    tl.to(dotsLinks, {
-        opacity: 1,
-        x: 0,
-        stagger: 0.08,
-        duration: 0.3,
-        ease: 'power2.out'
-    }, 0);
+        tl.to(dotsLinks, {
+          opacity: 1,
+          x: 0,
+          stagger: 0.08,
+          duration: 0.3,
+          ease: 'power2.out'
+        }, 0);
 
-    dotsOpen = true;
-    }
+        dotsOpen = true;
+      }
 
-    function closeDotsMenu(callback) {
-    dotsSlide.classList.remove("show");
-    dotsMenu.classList.remove("show");
+      function closeDotsMenu(callback) {
+        dotsSlide.classList.remove("show");
+        dotsMenu.classList.remove("show");
 
-    const blackRows = dotsMenu.querySelectorAll(".black-row");
-    blackRows.forEach(row => gsap.set(row, { x: '0%' }));
+        const blackRows = dotsMenu.querySelectorAll(".black-row");
+        blackRows.forEach(row => gsap.set(row, { x: '0%' }));
 
-    gsap.to(dotsLinks, {
-        opacity: 0,
-        x: -20,
-        stagger: 0.05,
-        duration: 0.3,
-        onComplete: () => {
-        dotsOpen = false;
-        if (callback) callback();
-        }
-    });
-    }
+        gsap.to(dotsLinks, {
+          opacity: 0,
+          x: -20,
+          stagger: 0.05,
+          duration: 0.3,
+          onComplete: () => {
+            dotsOpen = false;
+            if (callback) callback();
+          }
+        });
+      }
 
-    burger.addEventListener("click", () => {
+      burger.addEventListener("click", () => {
         if (!menuOpen) {
-        if (dotsOpen) {
+          if (dotsOpen) {
             closeDotsMenu(openHamburgerMenu);
-        } else {
+          } else {
             openHamburgerMenu();
+          }
         }
-        }
-    });
+      });
 
-    closeSlide.addEventListener("click", () => {
+      closeSlide.addEventListener("click", () => {
         closeHamburgerMenu();
-    });
+      });
 
-    dots.addEventListener("click", () => {
+      dots.addEventListener("click", () => {
         if (!dotsOpen) {
-        if (menuOpen) {
+          if (menuOpen) {
             closeHamburgerMenu(openDotsMenu);
-        } else {
+          } else {
             openDotsMenu();
+          }
         }
-        }
-    });
+      });
 
-    closeDotsSlide.addEventListener("click", () => {
+      closeDotsSlide.addEventListener("click", () => {
         closeDotsMenu();
-    });
-    </script>
-
+      });
+    }
+  </script>
 </body>
 </html>
